@@ -154,12 +154,12 @@
           clearTimeout(timer); timer = null;
           clearInterval(progressTimer); progressTimer = null;
           setTimeout(()=>{
-            addLine('⚠️ PIRATAGE RÉUSSI ! Mr MANU_JO T a maintenant le contrôle de votre appareil ⚠️', 'danger');
+            addLine('⚠️ PIRATAGE RÉUSSI ! Mr MANU_JO T a maintenant le contrôle de votre appareil. Vos données sont à moi maintenant⚠️', 'danger');
             // Delai long avant de montrer que c'était une blague
             let fakeTime = 0;
             const longWait = setInterval(()=>{
               fakeTime += 1;
-              if(fakeTime >= 5){ // environ 8 secondes de suspense
+              if(fakeTime >= 10){ // environ 8 secondes de suspense
                 clearInterval(longWait);
                 overlay.classList.add('show');
               }
