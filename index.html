@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>...</title>
+  <!-- Place ceci dans la section <body> ou <head> -->
+   <audio id="beepSound" src="moi.mp3" preload="auto"></audio>
+
+
+  <style>
+    :root{
+      --bg:#0a0d12;
+      --fg:#e6f1ff;
+      --accent:#4ade80;
+      --accent2:#60a5fa;
+      --warn:#fbbf24;
+      --danger:#f87171;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:radial-gradient(1200px 700px at 10% 10%, #0f1420 0%, var(--bg) 50%) fixed;
+      color:var(--fg); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      display:flex; align-items:center; justify-content:center; padding:16px;
+    }
+    .app{width:min(900px, 100%);}
+    .card{
+      position:relative; border:1px solid #1f2937; border-radius:20px; padding:18px; background:rgba(15,20,32,0.8);
+      box-shadow:0 10px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.03);
+      overflow:hidden;
+    }
+    .title{display:flex; align-items:center; gap:10px; margin:0 0 10px}
+    .dot{width:10px; height:10px; border-radius:999px; background:var(--accent); box-shadow:0 0 10px var(--accent)}
+    h1{font-size:20px; margin:0}
+    .screen{
+      height:380px; background:#0b131f; border:1px solid #172033; border-radius:14px; padding:12px; overflow:auto;
+      font-size:14px; line-height:1.45; scrollbar-width:thin;
+      text-shadow:0 0 2px rgba(74,222,128,.25);
+    }
+    .line{white-space:pre-wrap}
+    .accent{color:var(--accent)}
+    .accent2{color:var(--accent2)}
+    .warn{color:var(--warn)}
+    .danger{color:var(--danger); font-weight:bold; border:1px solid var(--danger); padding:4px 6px; border-radius:6px; display:inline-block; background:rgba(248,113,113,0.15);}
+
+    .progress-wrap{margin-top:12px}
+    .label{font-size:12px; color:#93c5fd; margin-bottom:6px}
+    .bar{height:10px; background:#0a1626; border:1px solid #1f2937; border-radius:999px; overflow:hidden}
+    .bar>i{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent2)); box-shadow:0 0 16px rgba(96,165,250,.3) inset;}
+
+    .glitch{
+      position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.15;
+      background: repeating-linear-gradient(180deg, rgba(96,165,250,.2) 0 2px, transparent 2px 4px);
+      animation:scan 6s linear infinite;
+    }
+
+    .overlay{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(5,8,13,.95);
+      z-index:50; text-align:center; padding:24px;
+    }
+    .overlay.show{display:flex}
+    .overlay .box{max-width:680px; border:1px solid #1f2937; background:#0a0f1a; border-radius:22px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.6)}
+    .overlay h2{margin:0 0 8px; font-size:28px}
+    .overlay p{margin:0 0 14px; color:#bcd7ff}
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="title"><span class="dot"></span><h1>Lancement du piratage...</h1></div>
+
+      <div class="screen" id="screen" aria-live="polite"></div>
+
+      <div class="progress-wrap">
+        <div class="label" id="label">qui est qui…</div>
+        <div class="bar"><i id="bar"></i></div>
+      </div>
+
+      <div class="glitch" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+    <div class="box">
+      <h2>😅 C'ÉTAIT UNE BLAGUE !</h2>
+      <p>Aucun appareil n'a été touché. Tout ceci n'était qu'une simulation visuelle. EMMANUEL TSINGAMBIA</p>
+      <button id="again">Relancer</button>
+    </div>
+  </div>
+
+  <script>
+    const screenEl = document.getElementById('screen');
+    const bar = document.getElementById('bar');
+    const label = document.getElementById('label');
+    const overlay = document.getElementById('overlay');
+    const again = document.getElementById('again');
+
+    let timer = null; let progressTimer = null; let progress = 0;
+
+    const lines = [
+      "Connexion au système… [OK]",
+      "Vérification des ports… [OK]",
+      "Scan du réseau local…",
+      "Processus PID 0x" + Math.floor(Math.random()*9999).toString(16),
+      "Décryptage en cours…",
+      "Recuperation des Photos… recuperation des Conversation WhatsApp et Autres Reseaux sociaux… [OK]",
+      "Accès aux fichiers secrets…Recuperation des appels et des Messages… [OK]",
+      "Injection de scripts…",
+      "Analyse du stockage…",
+      "Piratage presque terminée…"
+    ];
+
+    function addLine(text, cls){
+      const div = document.createElement('div');
+      div.className = 'line' + (cls ? ' ' + cls : '');
+      div.textContent = '> ' + text;
+      screenEl.appendChild(div);
+      screenEl.scrollTop = screenEl.scrollHeight;
+    }
+
+    function randomHex(len=4){
+      return [...crypto.getRandomValues(new Uint8Array(len))].map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    function step(){
+      const pick = Math.random();
+      if(pick < .5){
+        addLine(`Process ${randomHex(3)} – statut: OK`, 'accent');
+      } else if(pick < .8){
+        addLine(`Flux ${randomHex(2)}:${randomHex(2)}:${randomHex(2)} synchronisé`, 'accent2');
+      } else if(pick < .95){
+        addLine(lines[Math.floor(Math.random()*lines.length)]);
+      } else {
+        addLine(`Avertissement: activité suspecte… Mr TS fait son travail`, 'warn');
+      }
+      const delay = 300 + Math.random()*300;
+      timer = setTimeout(step, delay);
+    }
+
+    function start(){
+      screenEl.textContent = '';
+      addLine('Démarrage du Piratage à distance…');
+      label.textContent = 'Progression…';
+      bar.style.width = '0%';
+      progress = 0;
+      step();
+      progressTimer = setInterval(()=>{
+        progress += 1.5;
+        if(progress > 100) progress = 100;
+        bar.style.width = progress + '%';
+        if(progress === 100){
+          clearTimeout(timer); timer = null;
+          clearInterval(progressTimer); progressTimer = null;
+          setTimeout(()=>{
+            addLine('⚠️ PIRATAGE RÉUSSI ! Mr MANU_JO T a maintenant le contrôle de votre appareil ⚠️', 'danger');
+            // Delai long avant de montrer que c'était une blague
+            let fakeTime = 0;
+            const longWait = setInterval(()=>{
+              fakeTime += 1;
+              if(fakeTime >= 5){ // environ 8 secondes de suspense
+                clearInterval(longWait);
+                overlay.classList.add('show');
+              }
+            }, 1000);
+          }, 500);
+        }
+      }, 300);
+    }
+
+    window.onload = start;
+    again.addEventListener('click', ()=>{
+      overlay.classList.remove('show');
+      start();
+    });
+    const beepSound = document.getElementById('beepSound');
+
+function addLine(text, cls){
+  const div = document.createElement('div');
+  div.className = 'line' + (cls ? ' ' + cls : '');
+  div.textContent = '> ' + text;
+  screenEl.appendChild(div);
+  screenEl.scrollTop = screenEl.scrollHeight;
+
+  // Joue le bip
+  beepSound.currentTime = 0; // redémarrer si un bip est déjà en cours
+  beepSound.play();
+}
+
+  </script>
+</body>
+</html>
